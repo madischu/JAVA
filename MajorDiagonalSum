@@ -2,9 +2,13 @@ import java.util.Scanner;
 
 public class MajorDiagonalSum {
     public static double sumMajorDiagonal(double[][] m) {
+        int n = m.length;
+        double[][] diagonal = new double[n][n]; // second array to store diagonal
+
         double sum = 0;
-        for (int i = 0; i < m.length; i++) {
-            sum += m[i][i];  // add element at (i, i)
+        for (int i = 0; i < n; i++) {
+            diagonal[i][i] = m[i][i]; // copy diagonal element
+            sum += diagonal[i][i];    // add to sum
         }
         return sum;
     }
@@ -12,7 +16,7 @@ public class MajorDiagonalSum {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
-        double[][] matrix = new double[4][4];
+        double[][] matrix = new double[4][4]; // first array
 
         System.out.println("Enter a 4-by-4 matrix row by row:");
         for (int i = 0; i < 4; i++) {
@@ -25,3 +29,4 @@ public class MajorDiagonalSum {
         System.out.println("Sum of the elements in the major diagonal is " + result);
     }
 }
+
