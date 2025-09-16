@@ -1,0 +1,123 @@
+import java.math.*;
+import java.util.Scanner;
+
+public class Exercise13_15 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Enter rational r1 with numerator and denominator separated by a space: ");
+        String n1 = input.next();
+        String d1 = input.next();
+
+        System.out.print("Enter rational r2 with numerator and denominator separated by a space: ");
+        String n2 = input.next();
+        String d2 = input.next();
+
+        RationalUsingBigInteger r1 = new RationalUsingBigInteger(new BigInteger(n1), new BigInteger(d1));
+        RationalUsingBigInteger r2 = new RationalUsingBigInteger(new BigInteger(n2), new BigInteger(d2));
+
+        System.out.println(r1 + " + " + r2 + " = " + r1.add(r2));
+        System.out.println(r1 + " - " + r2 + " = " + r1.subtract(r2));
+        System.out.println(r1 + " * " + r2 + " = " + r1.multiply(r2));
+        System.out.println(r1 + " / " + r2 + " = " + r1.divide(r2));
+        System.out.println(r2 + " is " + r2.doubleValue());
+    }
+}
+
+class RationalUsingBigInteger extends Number implements Comparable<RationalUsingBigInteger> {
+    private BigInteger numerator = BigInteger.ZERO;
+    private BigInteger denominator = BigInteger.ONE;
+
+    public RationalUsingBigInteger() {
+        this(BigInteger.ZERO, BigInteger.ONE);
+    }
+
+    public RationalUsingBigInteger(BigInteger numerator, BigInteger denominator) {
+        if (denominator.equals(BigInteger.ZERO))
+            throw new ArithmeticException("Denominator cannot be zero");
+
+        BigInteger gcd = numerator.gcd(denominator);
+        this.numerator = (denominator.compareTo(BigInteger.ZERO) > 0 ? BigInteger.ONE : BigInteger.valueOf(-1))
+                .multiply(numerator).divide(gcd);
+        this.denominator = denominator.abs().divide(gcd);
+    }
+
+    public BigInteger getNumerator() {
+        return numerator;
+    }
+
+    public BigInteger getDenominator() {
+        return denominator;
+    }
+
+    public RationalUsingBigInteger add(RationalUsingBigInteger second) {
+        BigInteger n = numerator.multiply(second.getDenominator())
+                .add(denominator.multiply(second.getNumerator()));
+        BigInteger d = denominator.multiply(second.getDenominator());
+        return new RationalUsingBigInteger(n, d);
+    }
+
+    public RationalUsingBigInteger subtract(RationalUsingBigInteger second) {
+        BigInteger n = numerator.multiply(second.getDenominator())
+                .subtract(denominator.multiply(second.getNumerator()));
+        BigInteger d = denominator.multiply(second.getDenominator());
+        return new RationalUsingBigInteger(n, d);
+    }
+
+    public RationalUsingBigInteger multiply(RationalUsingBigInteger second) {
+        BigInteger n = numerator.multiply(second.getNumerator());
+        BigInteger d = denominator.multiply(second.getDenominator());
+        return new RationalUsingBigInteger(n, d);
+    }
+
+    public RationalUsingBigInteger divide(RationalUsingBigInteger second) {
+        BigInteger n = numerator.multiply(second.getDenominator());
+        BigInteger d = denominator.multiply(second.getNumerator());
+        return new RationalUsingBigInteger(n, d);
+    }
+
+    @Override
+    public String toString() {
+        if (denominator.equals(BigInteger.ONE))
+            return numerator.toString();
+        else
+            return numerator + "/" + denominator;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if ((other instanceof RationalUsingBigInteger)) {
+            RationalUsingBigInteger o = (RationalUsingBigInteger) other;
+            return numerator.equals(o.getNumerator()) &&
+                    denominator.equals(o.getDenominator());
+        }
+        return false;
+    }
+
+    @Override
+    public int compareTo(RationalUsingBigInteger o) {
+        BigInteger diff = this.numerator.multiply(o.getDenominator())
+                .subtract(o.getNumerator().multiply(this.denominator));
+        return diff.compareTo(BigInteger.ZERO);
+    }
+
+    @Override
+    public int intValue() {
+        return (int) doubleValue();
+    }
+
+    @Override
+    public float floatValue() {
+        return (float) doubleValue();
+    }
+
+    @Override
+    public double doubleValue() {
+        return numerator.doubleValue() / denominator.doubleValue();
+    }
+
+    @Override
+    public long longValue() {
+        return (long) doubleValue();
+    }
+}
