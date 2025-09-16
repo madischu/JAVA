@@ -1,0 +1,33 @@
+import java.util.*;
+import java.awt.geom.Point2D;
+
+public class SortPoints {
+    public static void main(String[] args) {
+        Point2D[] points = new Point2D[100];
+        Random rand = new Random();
+
+        // generate 100 random points with x, y in [0, 100)
+        for (int i = 0; i < points.length; i++) {
+            double x = rand.nextDouble() * 100;
+            double y = rand.nextDouble() * 100;
+            points[i] = new Point2D.Double(x, y);
+        }
+
+        // sort by y first, then by x
+        Arrays.sort(points, new Comparator<Point2D>() {
+            @Override
+            public int compare(Point2D p1, Point2D p2) {
+                int cmpY = Double.compare(p1.getY(), p2.getY());
+                if (cmpY != 0)
+                    return cmpY;
+                return Double.compare(p1.getX(), p2.getX());
+            }
+        });
+
+        // display first five points
+        for (int i = 0; i < 5; i++) {
+            System.out.printf("Point %d: (%.2f, %.2f)%n",
+                    i + 1, points[i].getX(), points[i].getY());
+        }
+    }
+}
